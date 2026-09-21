@@ -485,6 +485,37 @@ table.donnees .vide{ color:var(--encre-3); }
 .recap-marque.ok{ background:var(--foret); }
 .recap-marque.ko{ background:var(--carmin); color:#fff; }
 
+/* --- Arbre de détermination (2.2) --- */
+.choix-bouton{
+  text-align:left; font-family:var(--f-texte); font-size:.95rem; color:var(--encre);
+  background:var(--papier); border:1px solid var(--graticule); border-radius:var(--r);
+  padding:.75rem .9rem; cursor:pointer; transition:border-color .15s ease, background .15s ease;
+}
+.choix-bouton:hover{ border-color:var(--foret); background:var(--foret-pale); }
+.feuille-resultat{ border-left:3px solid var(--foret); padding-left:1rem; }
+
+/* --- Classer les variables (2.4) --- */
+.ligne-variable{
+  border:1px solid var(--graticule-fin); border-radius:var(--r);
+  background:var(--papier); padding:.8rem .9rem;
+  display:flex; flex-direction:column; gap:.6rem;
+}
+.ligne-variable + .ligne-variable{ margin-top:.5rem; }
+.ligne-variable.traitee{ background:var(--papier-releve); border-left:2px solid var(--foret); }
+.variable-texte{ display:grid; grid-template-columns:auto 1fr; gap:.7rem; align-items:start; font-size:.95rem; }
+.variable-num{ font-family:var(--f-marge); font-size:.72rem; color:var(--encre-3); margin-top:.18rem; }
+.variable-choix{ display:flex; gap:.35rem; flex-wrap:wrap; }
+.variable-choix .cmd{ font-size:.68rem; }
+.cmd.reponse-juste{
+  background:var(--foret); border-color:var(--foret); color:var(--sur-foret); opacity:1;
+}
+.cmd.reponse-fausse{
+  background:var(--carmin-pale); border-color:var(--carmin); color:var(--carmin);
+  text-decoration:line-through;
+}
+.cmd.reponse-eteinte{ opacity:.4; }
+.cmd:disabled{ cursor:default; }
+
 /* ====================== Pied ====================== */
 .pied{
   border-top:1px solid var(--graticule); margin-top:3rem; padding-block:1.6rem;
@@ -937,6 +968,268 @@ table.donnees .vide{ color:var(--encre-3); }
 </div>
 
 <!-- ================================================================
+     MODULE 2
+     ================================================================ -->
+<div class="vue" id="vue-m2" hidden>
+
+  <div class="entete-module">
+    <span class="eyebrow">Module 2 — Les données sources</span>
+    <h1 style="font-size:clamp(1.9rem,4.6vw,2.9rem)">Savoir ce qu'on a dans les mains</h1>
+    <p class="chapo colonne">
+      Étape II de la démarche. Avant de choisir un figuré, une couleur ou une classe,
+      il faut déterminer la nature exacte de chaque variable — car c'est elle, et non
+      le goût du cartographe, qui autorise ou interdit chaque solution graphique.
+    </p>
+    <div class="commandes" style="margin-top:.4rem">
+      <span class="jalon pret">7 sections</span>
+      <span class="jalon attente">≈ 50 minutes</span>
+      <span class="jalon attente">Contrôle : 8 questions</span>
+    </div>
+  </div>
+
+  <!-- ---------- 2.1 ---------- -->
+  <section class="bloc">
+    <div class="colonne pile">
+      <div><div class="num-bloc">2.1</div><h2>La donnée commande la carte</h2></div>
+      <p>
+        Les données sources sont l'information à transmettre. Elles s'apparentent aux
+        <strong>variables statistiques</strong>, et leur nature détermine mécaniquement ce
+        qu'il sera permis d'en faire : quelle variable visuelle peut les porter, si l'on
+        peut calculer une moyenne, si l'on peut fabriquer des classes ordonnées.
+      </p>
+      <div class="verdict neutre">
+        <strong>Le test qui tranche.</strong> Posez-vous une seule question :
+        <em>des opérations arithmétiques ont-elles un sens sur cette variable ?</em>
+        Peut-on l'additionner, en faire une moyenne, un rapport ? Si oui, la variable est
+        quantitative. Sinon, elle est qualitative — même si elle se présente sous forme de chiffres.
+      </div>
+      <p>
+        Cette dernière précision n'est pas une subtilité d'école. C'est l'erreur la plus
+        fréquente en SIG : un champ rempli de nombres dans une table attributaire n'est pas
+        nécessairement une variable quantitative. Un code INSEE, un identifiant de parcelle,
+        un numéro de faciès géologique sont des <em>étiquettes</em> déguisées en nombres.
+        Le logiciel, lui, ne fait pas la différence — il vous proposera très volontiers
+        d'en calculer la moyenne.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---------- 2.2 ---------- -->
+  <section class="bloc pile-lg">
+    <div class="colonne pile">
+      <div><div class="num-bloc">2.2</div><h2>Les quatre natures possibles</h2></div>
+      <p>
+        Deux questions successives suffisent à situer n'importe quelle variable dans l'une
+        de quatre cases. Parcourez l'arbre : il vous servira ensuite pour chaque couche
+        que vous ouvrirez.
+      </p>
+    </div>
+
+    <div class="planche amorces">
+      <div class="planche-tete">
+        <h4>Arbre de détermination</h4>
+        <div class="commandes"><button class="cmd" type="button" id="arbre-reprendre">Reprendre</button></div>
+      </div>
+      <div class="planche-corps">
+        <div id="arbre-donnees"></div>
+      </div>
+      <div class="planche-pied">
+        Les quatre cases ne sont pas d'égale portée : le passage du qualitatif au
+        quantitatif change ce qu'on peut calculer ; le passage de l'ordonné au
+        différentiel change ce qu'on peut hiérarchiser visuellement.
+      </div>
+    </div>
+
+    <div class="colonne">
+      <div class="tableau-enveloppe">
+        <table class="donnees">
+          <caption>Les quatre natures et ce qu'elles autorisent</caption>
+          <thead>
+            <tr><th scope="col">Nature</th><th scope="col">Exemple</th><th scope="col">Moyenne ?</th><th scope="col">Hiérarchie visuelle ?</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row" style="font-weight:400">Qualitative différentielle</th><td style="text-align:left">Faciès géologique</td><td>non</td><td>non</td></tr>
+            <tr><th scope="row" style="font-weight:400">Qualitative ordonnée</th><td style="text-align:left">Ère géologique</td><td>non</td><td>oui</td></tr>
+            <tr><th scope="row" style="font-weight:400">Quantitative discrète</th><td style="text-align:left">Nombre d'épis par m²</td><td>oui</td><td>oui</td></tr>
+            <tr><th scope="row" style="font-weight:400">Quantitative continue</th><td style="text-align:left">Altitude</td><td>oui</td><td>oui</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- 2.3 ---------- -->
+  <section class="bloc pile-lg">
+    <div class="colonne pile">
+      <div><div class="num-bloc">2.3</div><h2>Le piège du codage numérique</h2></div>
+      <p>
+        Une chaîne de supermarchés relève son chiffre d'affaires en décembre 1995 et en
+        décembre 1996, puis en déduit une variable <code>évolution</code> valant
+        « SUP », « STABLE » ou « INF ».
+      </p>
+    </div>
+
+    <div class="tableau-enveloppe">
+      <table class="donnees">
+        <caption>Chiffre d'affaires de six magasins, en francs</caption>
+        <thead>
+          <tr><th scope="col">Magasin</th><th scope="col">Déc. 1995</th><th scope="col">Déc. 1996</th><th scope="col">Évolution</th></tr>
+        </thead>
+        <tbody id="corps-supermarches"></tbody>
+      </table>
+    </div>
+
+    <div class="planche amorces">
+      <div class="planche-tete"><h4>Deux questions successives</h4></div>
+      <div class="planche-corps">
+        <div class="controle" id="qcm-codage"></div>
+      </div>
+      <div class="planche-pied">
+        Le codage ne change pas la nature de la donnée. Il change seulement ce que le
+        logiciel croit pouvoir en faire — et c'est précisément le danger.
+      </div>
+    </div>
+
+    <div class="colonne">
+      <div class="verdict ko">
+        <strong>Conséquence pratique dans QGIS.</strong> Si vous laissez un champ de codes
+        numériques en type <em>entier</em>, la symbologie graduée vous proposera des classes
+        par quantiles ou intervalles égaux, et produira un dégradé parfaitement lisible —
+        et parfaitement faux. Les « classes » obtenues n'auront aucune réalité :
+        rien ne garantit que le faciès 7 soit deux fois quelque chose du faciès 3.
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- 2.4 ---------- -->
+  <section class="bloc pile-lg">
+    <div class="colonne pile">
+      <div><div class="num-bloc">2.4</div><h2>Exercice : caractériser douze variables</h2></div>
+      <p>
+        Pour étudier des variétés de blé tendre, on relève pour chacune les
+        caractéristiques ci-dessous. Deux variables d'origine géologique s'y ajoutent, pour
+        couvrir les quatre cases de l'arbre. Classez chacune, puis lisez la correction.
+      </p>
+      <p class="note">
+        Certaines demandent de réfléchir au <em>procédé de mesure</em> plutôt qu'à l'unité
+        affichée : compter n'est pas mesurer.
+      </p>
+    </div>
+
+    <div class="planche amorces">
+      <div class="planche-tete">
+        <h4>Classez chaque variable</h4>
+        <div class="commandes">
+          <span class="chrono-libelle" id="score-ble">0 / 12 classées</span>
+          <button class="cmd" type="button" id="ble-reprendre">Recommencer</button>
+        </div>
+      </div>
+      <div class="planche-corps">
+        <div id="exercice-ble"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- 2.5 ---------- -->
+  <section class="bloc">
+    <div class="colonne pile">
+      <div><div class="num-bloc">2.5</div><h2>Les trois relations entre données</h2></div>
+      <p>
+        Déterminer la nature d'une variable ne suffit pas : il faut aussi savoir quelle
+        <strong>relation</strong> on veut donner à voir. Bertin en distingue trois, et
+        chacune appelle une famille précise de variables visuelles — c'est le pont vers
+        le module 4.
+      </p>
+      <div class="etapes" style="margin-top:.6rem">
+        <div class="etape">
+          <span class="etape-num" style="background:var(--foret)">≠</span>
+          <div>
+            <h4>La différence, ou ressemblance</h4>
+            <p>Ces deux objets sont-ils de même nature ? Relation de simple séparation,
+            sans hiérarchie. Elle appelle les variables <em>associatives</em> : forme,
+            orientation, teinte. Cas type : deux faciès géologiques distincts.</p>
+          </div>
+        </div>
+        <div class="etape">
+          <span class="etape-num" style="background:var(--foret)">&lt;</span>
+          <div>
+            <h4>L'ordre</h4>
+            <p>Cet objet vient-il avant ou après cet autre ? Relation de rang, sans que
+            l'écart soit mesurable. Elle exige une variable <em>ordonnée</em> : la valeur,
+            le grain, la taille. Cas type : les ères géologiques, du plus ancien au plus récent.</p>
+          </div>
+        </div>
+        <div class="etape">
+          <span class="etape-num" style="background:var(--foret)">×</span>
+          <div>
+            <h4>La proportionnalité</h4>
+            <p>Combien de fois cet objet est-il plus grand que cet autre ? Relation
+            quantitative exacte. Seule la <em>taille</em> la transcrit fidèlement, parce
+            que seule la surface d'un symbole se lit comme une quantité. Cas type :
+            la production pétrolière du module 1.</p>
+          </div>
+        </div>
+      </div>
+      <div class="verdict ok" style="margin-top:1.2rem">
+        <strong>La règle en une phrase.</strong> On ne peut jamais représenter une relation
+        plus forte que celle que la donnée contient — mais on peut parfaitement, et c'est
+        l'erreur courante, en représenter une plus forte qu'elle n'en contient.
+        Un dégradé de valeur appliqué à des faciès géologiques invente un ordre qui n'existe pas.
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- 2.6 ---------- -->
+  <section class="bloc pile-lg">
+    <div class="colonne pile">
+      <div><div class="num-bloc">2.6</div><h2>Application : les données de la Ngounié</h2></div>
+      <p>
+        Voici les couches que vous manipulerez aux modules 8 et 9. Avant d'ouvrir QGIS,
+        sachez ce que chaque champ autorise.
+      </p>
+    </div>
+
+    <div class="tableau-enveloppe">
+      <table class="donnees">
+        <caption>DONNEES_TD2 — nature des principaux champs</caption>
+        <thead>
+          <tr><th scope="col">Couche · champ</th><th scope="col">Nature</th><th scope="col">Traitement graphique légitime</th></tr>
+        </thead>
+        <tbody id="corps-ngounie"></tbody>
+      </table>
+    </div>
+
+    <div class="colonne">
+      <p class="note">
+        Notez la ligne <code>STRATI_EN</code> : c'est une nomenclature stratigraphique, donc
+        une variable qualitative <strong>ordonnée</strong> — les étages se succèdent dans le
+        temps. C'est ce qui rendra la jointure attributaire du module 8 payante :
+        sans elle, vous n'auriez que des codes de faciès sans ordre, et la carte perdrait
+        toute la dimension chronologique du substrat.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---------- 2.7 ---------- -->
+  <section class="bloc">
+    <div class="colonne pile" style="margin-bottom:1.4rem">
+      <div><div class="num-bloc">2.7</div><h2>Contrôle de lecture</h2></div>
+      <p>
+        Huit questions, une par une, <strong>sans retour en arrière</strong>.
+        Même règle qu'au module 1.
+      </p>
+    </div>
+    <div id="controle-m2"></div>
+    <div id="bilan-m2" style="margin-top:1.2rem"></div>
+  </section>
+
+  <div class="nav-bas">
+    <a class="cmd" href="#m1">← Module 1</a>
+    <a class="cmd" href="#accueil">Sommaire →</a>
+  </div>
+</div>
+
+<!-- ================================================================
      DONNÉES DU TP
      ================================================================ -->
 <div class="vue" id="vue-donnees" hidden>
@@ -1045,7 +1338,7 @@ const CFG = Object.assign({
    ============================================================ */
 const MODULES = [
   {id:"m1",  t:"La carte est un langage",              s:"Définitions, démarche, les quatre questions, les cinq pièges", etat:"ouvert"},
-  {id:"m2",  t:"Les données sources",                  s:"Qualitatif ordonné ou différentiel, quantitatif discret ou continu", etat:"redaction"},
+  {id:"m2",  t:"Les données sources",                  s:"Qualitatif ordonné ou différentiel, quantitatif discret ou continu", etat:"ouvert"},
   {id:"m3",  t:"Les modes d'implantation",             s:"Ponctuel, linéaire, zonal — et pourquoi le choix n'est pas libre", etat:"redaction"},
   {id:"m4",  t:"Les variables visuelles",              s:"Taille, valeur, grain, forme, orientation, couleur : propriétés et usages", etat:"redaction"},
   {id:"m5",  t:"La couleur",                           s:"Teinte, saturation, luminosité ; seuils perceptifs ; connotations", etat:"redaction"},
@@ -1090,7 +1383,19 @@ let etat = lire();
 /* ============================================================
    ROUTAGE
    ============================================================ */
-const VUES = ["accueil","m1","donnees"];
+const VUES = ["accueil"].concat(MODULES.filter(m => m.etat === "ouvert").map(m => m.id)).concat(["donnees"]);
+
+/* La barre de navigation suit l'ouverture des modules : inutile de la
+   retoucher à chaque livraison. */
+function rendreNav(){
+  const nav = document.getElementById("nav-principal");
+  nav.innerHTML =
+    '<a href="#accueil">Sommaire</a>' +
+    MODULES.filter(m => m.etat === "ouvert")
+           .map((m,i) => '<a href="#' + m.id + '">Module ' + (MODULES.indexOf(m)+1) + '</a>').join("") +
+    '<a href="#donnees">Données du TP</a>';
+}
+
 function router(){
   let cible = (location.hash || "#accueil").slice(1);
   if (!VUES.includes(cible)) cible = "accueil";
@@ -1675,6 +1980,317 @@ const Q_M1 = [
 ];
 
 /* ============================================================
+   MODULE 2 — ARBRE DE DÉTERMINATION
+   ============================================================ */
+const FEUILLES = {
+  qd: {n:"Qualitative différentielle", s:"dite aussi nominale",
+       d:"Une nomenclature : les catégories se distinguent sans qu'aucune ne précède l'autre.",
+       ex:["Faciès géologiques de la Ngounié","Types d'occupation du sol","Pays producteurs de pétrole"],
+       oui:"Séparer : forme, orientation, teinte.",
+       non:"Toute hiérarchie visuelle — un dégradé de valeur inventerait un ordre inexistant."},
+  qo: {n:"Qualitative ordonnée", s:"dite aussi ordinale",
+       d:"Les catégories se succèdent dans un ordre incontestable, mais l'écart entre deux d'entre elles n'est pas mesurable.",
+       ex:["Ères et étages géologiques","Ordre chronologique","Typologie faible / moyen / fort"],
+       oui:"Ordonner : valeur, grain, taille.",
+       non:"Toute moyenne ou tout rapport : « l'étage moyen » n'a aucun sens."},
+  nd: {n:"Quantitative discrète", s:"comptage",
+       d:"La variable ne prend que des valeurs isolées, issues d'un dénombrement. Entière, le plus souvent.",
+       ex:["Nombre d'épis par m²","Nombre de grains par épi","Nombre d'installations solaires"],
+       oui:"Tout : séparer, ordonner, proportionner. La taille reste la plus fidèle.",
+       non:"Rien n'est interdit — mais les valeurs intermédiaires n'existent pas."},
+  nc: {n:"Quantitative continue", s:"mesure",
+       d:"La variable peut prendre toutes les valeurs d'un intervalle : la précision ne dépend que de l'instrument.",
+       ex:["Altitude au MNT","Hauteur de l'épi en mm","Précipitations annuelles"],
+       oui:"Tout, avec en prime la discrétisation en classes — dont le choix des seuils est un acte cartographique.",
+       non:"Rien — c'est la variable la plus libre, donc celle qui expose le plus aux mauvaises classes."}
+};
+
+const ARBRE = {
+  depart: {
+    q:"Des opérations arithmétiques ont-elles un sens sur cette variable ? Peut-on l'additionner, en faire une moyenne ?",
+    a:[{t:"Non — ce sont des étiquettes", v:"qual"},
+       {t:"Oui — ce sont des mesures ou des comptages", v:"quant"}]
+  },
+  qual: {
+    q:"Les catégories ont-elles un ordre naturel, incontestable ?",
+    rappel:"Variable qualitative",
+    a:[{t:"Oui, elles se succèdent", f:"qo"},
+       {t:"Non, elles se distinguent seulement", f:"qd"}]
+  },
+  quant: {
+    q:"La variable résulte-t-elle d'un comptage, ne prenant que des valeurs isolées ?",
+    rappel:"Variable quantitative",
+    a:[{t:"Oui, on dénombre", f:"nd"},
+       {t:"Non, on mesure", f:"nc"}]
+  }
+};
+
+function monterArbre(){
+  const hote = document.getElementById("arbre-donnees");
+  let chemin = [];
+
+  function noeud(cle){
+    const n = ARBRE[cle];
+    hote.innerHTML =
+      (n.rappel ? '<div class="etat-controle" style="margin-bottom:.7rem">' +
+                  '<span class="pastille reliee"></span>' + n.rappel + '</div>' : '') +
+      '<p style="font-size:1.03rem;font-weight:600;margin-bottom:.9rem">' + n.q + '</p>' +
+      '<div class="choix">' + n.a.map((r,i) =>
+        '<button class="choix-bouton" type="button" data-i="' + i + '">' + r.t + '</button>').join("") +
+      '</div>';
+    hote.querySelectorAll(".choix-bouton").forEach(b => {
+      b.addEventListener("click", () => {
+        const r = n.a[+b.dataset.i];
+        chemin.push(r.t);
+        if (r.f) feuille(r.f); else noeud(r.v);
+      });
+    });
+  }
+
+  function feuille(cle){
+    const f = FEUILLES[cle];
+    hote.innerHTML =
+      '<div class="feuille-resultat">' +
+      '<span class="eyebrow" style="color:var(--foret)">' + f.s + '</span>' +
+      '<h3 style="margin-block:.25rem .6rem">' + f.n + '</h3>' +
+      '<p style="font-size:.96rem;color:var(--encre-2)">' + f.d + '</p>' +
+      '<div class="duo" style="margin-top:1rem;gap:.8rem">' +
+        '<div class="verdict ok"><strong>Ce qu\'on peut faire.</strong><br>' + f.oui + '</div>' +
+        '<div class="verdict ko"><strong>Ce qu\'on s\'interdit.</strong><br>' + f.non + '</div>' +
+      '</div>' +
+      '<p class="note" style="margin-top:.9rem"><strong>Exemples :</strong> ' + f.ex.join(" · ") + '</p>' +
+      '<p class="note" style="margin-top:.5rem;font-style:italic">Chemin suivi : ' + chemin.join(" → ") + '</p>' +
+      '</div>';
+  }
+
+  document.getElementById("arbre-reprendre").addEventListener("click", () => { chemin = []; noeud("depart"); });
+  noeud("depart");
+}
+
+/* ============================================================
+   MODULE 2 — SUPERMARCHÉS, TABLEAU ET PIÈGE DU CODAGE
+   ============================================================ */
+const SUPERMARCHES = [
+  ["St Jean de Brives", 35850, 60000, "SUP"],
+  ["Prades-sur-Verdon", 25650, 11125, "INF"],
+  ["Trifouilly",        60000, 60000, "STABLE"],
+  ["Vienna",            55000, 45500, "INF"],
+  ["St Mathieu",        50000, 55000, "SUP"],
+  ["Lyonny",            75000, 76000, "SUP"]
+];
+
+const Q_CODAGE = [
+  { q:"La variable « évolution », qui vaut SUP, STABLE ou INF, est-elle quantitative ou qualitative ?",
+    choix:["Quantitative, puisqu'elle décrit une variation de chiffre d'affaires",
+           "Qualitative ordonnée : trois catégories, dans un ordre incontestable",
+           "Qualitative différentielle : trois catégories sans ordre",
+           "Quantitative continue"],
+    bon:1,
+    exp:"On ne peut ni additionner « SUP » et « INF », ni en faire une moyenne : la variable est " +
+        "<b>qualitative</b>. Mais INF, STABLE et SUP se succèdent dans un ordre que personne ne " +
+        "contesterait : elle est donc <b>ordonnée</b>. Le chiffre d'affaires dont elle dérive est, " +
+        "lui, bien quantitatif — mais ce n'est plus la même variable." },
+
+  { q:"On remplace SUP, STABLE et INF par 1, 0 et −1. La nature de la variable change-t-elle ?",
+    choix:["Oui, elle devient quantitative discrète : on peut maintenant calculer",
+           "Oui, elle devient quantitative continue",
+           "Non : ce sont des codes, la variable reste qualitative ordonnée",
+           "Non, elle devient qualitative différentielle"],
+    bon:2,
+    exp:"Le codage ne transforme pas la donnée, seulement son écriture. Une moyenne de 0,33 ne " +
+        "voudrait rien dire : elle ne désignerait aucun état réel entre « stable » et « en hausse ». " +
+        "C'est exactement le piège qui se referme sur un champ de codes laissé en type entier " +
+        "dans une table attributaire : le logiciel proposera des classes, et elles seront vides de sens." }
+];
+
+/* ============================================================
+   MODULE 2 — CLASSER DOUZE VARIABLES
+   ============================================================ */
+const CATEGORIES = [
+  {c:"qd", t:"Qualitative différentielle"},
+  {c:"qo", t:"Qualitative ordonnée"},
+  {c:"nd", t:"Quantitative discrète"},
+  {c:"nc", t:"Quantitative continue"}
+];
+
+const VARIABLES_BLE = [
+  {v:"Date d'épiaison, en nombre de jours depuis le 01/05", b:"nd",
+   e:"On dénombre des jours entiers : c'est un comptage, donc une variable discrète. " +
+     "Si l'on avait relevé l'heure exacte de l'épiaison, la mesure serait devenue continue — " +
+     "c'est le procédé de relevé, et non le phénomène, qui tranche."},
+  {v:"Hauteur de l'épi dans la tige le 10/04, en mm", b:"nc",
+   e:"Une longueur se mesure ; entre 42 et 43 mm existent toutes les valeurs intermédiaires. " +
+     "Le millimètre est la précision de l'instrument, pas un pas réel."},
+  {v:"Quantité d'eau contenue dans le grain, en dg", b:"nc",
+   e:"Une masse est continue, quelle que soit l'unité d'affichage."},
+  {v:"Teneur en eau du grain, en %", b:"nc",
+   e:"Un pourcentage est un rapport de deux grandeurs continues : il est continu, et peut " +
+     "prendre n'importe quelle valeur entre 0 et 100."},
+  {v:"Poids de matière sèche du grain, en dg", b:"nc",
+   e:"Masse, donc continue — même raisonnement que pour la quantité d'eau."},
+  {v:"Nombre d'épis par m²", b:"nd",
+   e:"On compte des épis. Il ne peut y en avoir 12,4 : les valeurs sont isolées les unes des autres."},
+  {v:"Coefficient de tallage : nombre d'épis au m² divisé par nombre de plantes par m²", b:"nc",
+   e:"C'est le quotient de deux comptages, et un quotient d'entiers n'est pas entier : " +
+     "1,73 épi par plante est une valeur parfaitement légitime. Le rapport rend la variable continue."},
+  {v:"Nombre de grains par épi", b:"nd",
+   e:"Comptage, donc discret."},
+  {v:"Nombre de grains par m²", b:"nd",
+   e:"Comptage, malgré des effectifs élevés. Un grand nombre discret reste discret : " +
+     "ce n'est pas l'ordre de grandeur qui décide, c'est le dénombrement."},
+  {v:"Poids de 1000 grains à 16 % d'humidité, en g", b:"nc",
+   e:"Une masse mesurée : continue. Le « 1000 grains » n'est qu'un protocole de normalisation."},
+  {v:"Faciès géologique relevé sur la carte de la Ngounié", b:"qd",
+   e:"Une nomenclature de roches. Aucun faciès ne vient avant ni après un autre : " +
+     "les catégories se distinguent, sans se hiérarchiser."},
+  {v:"Étage stratigraphique de la formation (STRATI_EN)", b:"qo",
+   e:"Les étages se succèdent chronologiquement : l'ordre est incontestable. Mais l'écart " +
+     "entre deux étages n'est pas une quantité manipulable — qualitative ordonnée, donc."}
+];
+
+function monterExerciceBle(){
+  const hote = document.getElementById("exercice-ble");
+  let faites = {};
+
+  function compter(){
+    const n = Object.keys(faites).length;
+    const bons = Object.values(faites).filter(r => r.ok).length;
+    document.getElementById("score-ble").textContent =
+      n === 0 ? "0 / 12 classées"
+              : n + " / 12 classées — " + bons + " juste" + (bons > 1 ? "s" : "");
+  }
+
+  function rendre(){
+    hote.innerHTML = VARIABLES_BLE.map((o,i) => {
+      const rep = faites[i];
+      const fini = rep !== undefined;
+      return '<div class="ligne-variable' + (fini ? " traitee" : "") + '">' +
+        '<div class="variable-texte"><span class="variable-num">' + String(i+1).padStart(2,"0") + '</span>' +
+        '<span>' + o.v + '</span></div>' +
+        '<div class="variable-choix">' + CATEGORIES.map(c => {
+          let cls = "cmd";
+          if (fini){
+            /* La bonne réponse s'allume, le choix erroné de l'étudiant
+               est signalé, le reste s'efface. */
+            if (c.c === o.b)            cls += " reponse-juste";
+            else if (c.c === rep.c)     cls += " reponse-fausse";
+            else                        cls += " reponse-eteinte";
+          }
+          return '<button class="' + cls + '" type="button" data-v="' + i + '" data-c="' + c.c + '"' +
+                 (fini ? " disabled" : "") + '>' + c.t + '</button>';
+        }).join("") + '</div>' +
+        (fini ? '<div class="explication"><b>' + (rep.ok ? "Juste." : "À revoir.") + '</b> ' + o.e + '</div>' : '') +
+        '</div>';
+    }).join("");
+
+    hote.querySelectorAll("button[data-v]").forEach(b => {
+      b.addEventListener("click", () => {
+        const i = +b.dataset.v;
+        faites[i] = {c: b.dataset.c, ok: (b.dataset.c === VARIABLES_BLE[i].b)};
+        rendre(); compter();
+      });
+    });
+  }
+
+  document.getElementById("ble-reprendre").addEventListener("click", () => { faites = {}; rendre(); compter(); });
+  rendre(); compter();
+}
+
+/* ============================================================
+   MODULE 2 — CHAMPS DE LA NGOUNIÉ
+   ============================================================ */
+const CHAMPS_NGOUNIE = [
+  ["Dep_Gabon · NOM_DEP", "Qualitative différentielle", "Teinte pour distinguer, jamais de dégradé"],
+  ["Geologie · CODE_GEOL", "Qualitative différentielle", "Teintes séparables ; à ne surtout pas graduer"],
+  ["Nomenclature · STRATI_EN", "Qualitative ordonnée", "Valeur ou teinte ordonnée, du plus ancien au plus récent"],
+  ["SRTM · altitude", "Quantitative continue", "Teintes hypsométriques, classes à choisir"],
+  ["Ombrage · valeur 0–255", "Quantitative continue", "Niveaux de gris, en mode de fusion"],
+  ["hydro · ORDRE", "Quantitative discrète", "Épaisseur de trait proportionnelle au rang"]
+];
+
+/* ============================================================
+   MODULE 2 — CONTRÔLE
+   ============================================================ */
+const Q_M2 = [
+  { q:"Quel test permet de trancher entre variable qualitative et quantitative ?",
+    choix:["Vérifier si la variable est stockée sous forme de nombres",
+           "Vérifier si des opérations arithmétiques ont un sens sur elle",
+           "Vérifier si elle comporte plus de sept modalités",
+           "Vérifier si elle provient d'une table attributaire ou d'un raster"],
+    bon:1,
+    exp:"Seul compte le <b>sens</b> des opérations, pas la forme du stockage. Un code INSEE est " +
+        "écrit en chiffres et reste une étiquette : sa moyenne ne désigne aucune commune." },
+
+  { q:"Le nombre de grains par m² peut atteindre plusieurs dizaines de milliers. Cette variable est :",
+    choix:["Continue, parce que les valeurs sont très nombreuses",
+           "Continue, parce qu'elle dépasse le millier",
+           "Discrète, parce qu'elle résulte d'un dénombrement",
+           "Qualitative ordonnée"],
+    bon:2,
+    exp:"L'ordre de grandeur n'entre pas en ligne de compte : ce qui décide, c'est le " +
+        "<b>procédé</b>. On dénombre des grains, donc la variable est discrète, quand bien " +
+        "même elle compterait des millions d'unités." },
+
+  { q:"Le coefficient de tallage est le rapport du nombre d'épis au m² sur le nombre de plantes par m². Il est :",
+    choix:["Discret, puisqu'il combine deux comptages",
+           "Continu, parce qu'un quotient d'entiers n'est pas entier",
+           "Qualitatif ordonné",
+           "Sans nature définie, étant un indice composite"],
+    bon:1,
+    exp:"1,73 épi par plante est une valeur parfaitement légitime : le quotient fait sortir " +
+        "la variable de l'ensemble des entiers. C'est un cas fréquent — densités, taux, " +
+        "rendements à l'hectare sont tous continus alors qu'ils dérivent de comptages." },
+
+  { q:"On remplace les modalités INF, STABLE, SUP par −1, 0, 1. Que devient la variable ?",
+    choix:["Elle devient quantitative discrète",
+           "Elle devient quantitative continue",
+           "Elle reste qualitative ordonnée",
+           "Elle devient qualitative différentielle"],
+    bon:2,
+    exp:"Le codage numérique ne change que l'écriture. Les chiffres sont ici des " +
+        "<b>étiquettes de rang</b> : une moyenne de 0,33 ne correspondrait à aucun état réel " +
+        "du chiffre d'affaires." },
+
+  { q:"Quelle relation entre données seule la variable visuelle « taille » transcrit-elle fidèlement ?",
+    choix:["La différence","L'ordre","La proportionnalité","La ressemblance"],
+    bon:2,
+    exp:"Seule la surface d'un symbole se lit comme une quantité : un cercle deux fois plus " +
+        "grand en aire se perçoit comme deux fois plus. La valeur et le grain ordonnent sans " +
+        "permettre de dire combien de fois." },
+
+  { q:"Appliquer un dégradé de valeur aux faciès géologiques de la Ngounié reviendrait à :",
+    choix:["Respecter la nature de la donnée",
+           "Inventer un ordre que la donnée ne contient pas",
+           "Perdre de l'information sans en ajouter",
+           "Produire une carte peu esthétique mais juste"],
+    bon:1,
+    exp:"C'est l'erreur de fond du module : on ne peut jamais représenter une relation plus " +
+        "forte que celle contenue dans la donnée. Un dégradé <b>ajoute</b> une hiérarchie au " +
+        "lecteur, qui croira lire un gradient là où il n'y a qu'une nomenclature." },
+
+  { q:"Les étages stratigraphiques du champ STRATI_EN constituent une variable :",
+    choix:["Quantitative continue, l'âge étant mesurable en millions d'années",
+           "Qualitative ordonnée",
+           "Qualitative différentielle",
+           "Quantitative discrète"],
+    bon:1,
+    exp:"Les étages se succèdent dans un ordre incontestable, mais l'écart entre deux d'entre " +
+        "eux n'est pas une quantité qu'on manipule : on ne fait pas la moyenne de deux étages. " +
+        "L'âge absolu en millions d'années serait, lui, une variable continue — mais c'est une " +
+        "autre variable." },
+
+  { q:"Un champ contient des nombres entiers dans une table attributaire. Que faut-il vérifier en priorité ?",
+    choix:["Que le type du champ est bien « entier » et non « texte »",
+           "Que ces nombres sont des mesures et non des codes",
+           "Que la précision est suffisante",
+           "Que le champ ne comporte pas de valeurs nulles"],
+    bon:1,
+    exp:"La question de la nature précède celle du type informatique. QGIS proposera des classes " +
+        "graduées sur n'importe quel champ numérique, codes compris — et la carte obtenue sera " +
+        "lisible, séduisante, et fausse." }
+];
+
+/* ============================================================
    PASSERELLE SCORM 1.2
    Quand la page est jouée depuis Moodle, le LMS expose un objet
    « API » quelque part dans la chaîne des fenêtres parentes.
@@ -1747,9 +2363,10 @@ const SCORM = (function(){
       try { API && ouvert && API.LMSCommit(""); } catch(e){}
     },
 
-    /* Détail par question : Moodle l'affiche dans le rapport d'interactions. */
-    interaction(rang, identifiant, reponse, juste){
-      const p = "cmi.interactions." + rang + ".";
+    /* Détail par question. Le rang doit rester unique sur l'ensemble
+       du cours : les modules se partagent un seul compteur. */
+    interaction(identifiant, reponse, juste){
+      const p = "cmi.interactions." + (rangInteraction++) + ".";
       set(p + "id", identifiant);
       set(p + "type", "choice");
       set(p + "student_response", reponse);
@@ -1757,20 +2374,41 @@ const SCORM = (function(){
       set(p + "weighting", "1");
     },
 
-    terminer(note, total){
-      if (!ouvert) return;
-      const sur100 = Math.round(note / total * 100);
+    /* Un seul SCO porte tous les modules : on ne clôt donc pas la session
+       à la fin d'un module. La note remontée est le cumul des contrôles
+       déjà passés, ramené sur 100. */
+    noterModule(attendus){
+      if (!ouvert) return 0;
+      let obtenu = 0, possible = 0, passes = 0;
+      attendus.forEach(id => {
+        const r = etat[id];
+        if (r && r.note !== undefined){ obtenu += r.note; possible += r.total; passes++; }
+      });
+      if (!possible) return 0;
+      const sur100 = Math.round(obtenu / possible * 100);
       set("cmi.core.score.min", "0");
       set("cmi.core.score.max", "100");
       set("cmi.core.score.raw", sur100);
-      set("cmi.core.lesson_status", sur100 >= 60 ? "passed" : "failed");
+      set("cmi.core.lesson_status",
+          passes < attendus.length ? "incomplete" : (sur100 >= 60 ? "passed" : "failed"));
       set("cmi.core.session_time", duree());
-      set("cmi.core.exit", "");
+      try { API.LMSCommit(""); } catch(e){}
+      return sur100;
+    },
+
+    /* Clôture réelle : au départ de l'étudiant, pas à la fin d'un module. */
+    cloturer(){
+      if (!ouvert) return;
+      set("cmi.core.session_time", duree());
+      set("cmi.core.exit", "suspend");
       try { API.LMSCommit(""); API.LMSFinish(""); } catch(e){}
       ouvert = false;
     }
   };
 })();
+
+/* Compteur d'interactions partagé par tous les modules. */
+let rangInteraction = 0;
 
 /* ============================================================
    CONTRÔLE EN SENS UNIQUE
@@ -1861,7 +2499,7 @@ function ControleLineaire(hote, questions, identifiant, surFin){
     hote.querySelector("#suite-question").innerHTML =
       '<div class="explication"><b>' + (juste ? "Juste." : "À revoir.") + '</b> ' + q.exp + '</div>';
 
-    if (SCORM.actif()) SCORM.interaction(rang, identifiant + "-q" + (rang+1), String(rep), juste);
+    if (SCORM.actif()) SCORM.interaction(identifiant + "-q" + (rang+1), String(rep), juste);
 
     const dernier = (rang === questions.length - 1);
     const zone = hote.querySelector("#valider-question").parentElement;
@@ -1920,6 +2558,7 @@ function rendreDonnees(){
    DÉMARRAGE
    ============================================================ */
 function demarrer(){
+  rendreNav();
   rendreSommaire();
   router();
   dessinerCarteLecture();
@@ -1934,39 +2573,92 @@ function demarrer(){
     });
   });
 
-  const controle = new ControleLineaire(
-    document.getElementById("controle-m1"), Q_M1, "m1",
-    (note, total) => {
-      etat.m1 = {note: note, total: total, date: new Date().toISOString().slice(0,10)};
-      ecrire(etat);
-      rendreSommaire();
+  installerControle("m1", Q_M1, {
+    parfait: "Module acquis. Le module 2 peut s'enchaîner sans reprise.",
+    bon:     "Acquis dans l'ensemble. Relisez les sections correspondant aux erreurs avant d'avancer.",
+    fragile: "Fragile. Reprenez les sections 1.2 et 1.5 : la démarche doit être automatique avant le TP.",
+    faible:  "Reprenez le module depuis le début. Les notions ne sont pas encore en place."
+  });
 
-      let mot;
-      if (note === total)      mot = "Module acquis. Le module 2 peut s'enchaîner sans reprise.";
-      else if (note >= 6)      mot = "Acquis dans l'ensemble. Relisez les sections correspondant aux erreurs avant d'avancer.";
-      else if (note >= 4)      mot = "Fragile. Reprenez les sections 1.2 et 1.5 : la démarche doit être automatique avant le TP.";
-      else                     mot = "Reprenez le module depuis le début. Les notions ne sont pas encore en place.";
+  /* ---- Module 2 ---- */
+  monterArbre();
+  monterExerciceBle();
 
-      /* On relève l'état avant de clore la session : LMSFinish rend
-         l'API inutilisable, actif() passerait alors à faux. */
-      const relie = SCORM.actif();
-      SCORM.terminer(note, total);
+  const tbSup = document.getElementById("corps-supermarches");
+  SUPERMARCHES.forEach(([nom, a, b, ev]) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = "<th scope='row' style='font-weight:400'>" + nom + "</th>" +
+      "<td>" + a.toLocaleString("fr-FR") + "</td>" +
+      "<td>" + b.toLocaleString("fr-FR") + "</td>" +
+      "<td style='font-family:var(--f-marge);font-size:.78rem'>" + ev + "</td>";
+    tbSup.appendChild(tr);
+  });
 
-      document.getElementById("bilan-m1").innerHTML =
-        '<div class="bilan amorces"><span class="bilan-note">' + note + '/' + total + '</span>' +
-        '<span style="flex:1;min-width:220px">' + mot +
-        '<br><span class="note">' +
-        (relie ? 'Note transmise à Moodle : ' + Math.round(note/total*100) + '/100.'
-               : 'Mode libre — cette note reste dans ce navigateur.') +
-        '</span></span>' +
-        (note >= 6 ? '<a class="cmd-plein" href="#accueil" style="text-decoration:none">Retour au sommaire</a>' : '') +
-        '</div>';
-    });
+  const tbNg = document.getElementById("corps-ngounie");
+  CHAMPS_NGOUNIE.forEach(([champ, nature, traitement]) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = "<th scope='row' style='font-weight:400;font-family:var(--f-marge);font-size:.8rem'>" + champ + "</th>" +
+      "<td style='text-align:left'>" + nature + "</td>" +
+      "<td style='text-align:left'>" + traitement + "</td>";
+    tbNg.appendChild(tr);
+  });
+
+  rendreQCM(document.getElementById("qcm-codage"), Q_CODAGE, "codage");
+  document.querySelectorAll("#qcm-codage input").forEach(inp => {
+    inp.addEventListener("change", () => corrigerQCM(document.getElementById("qcm-codage"), Q_CODAGE));
+  });
+
+  installerControle("m2", Q_M2, {
+    parfait: "Module acquis. La typologie est en place : le module 3 peut suivre.",
+    bon:     "Acquis dans l'ensemble. Revoyez les cas qui vous ont échappé avant d'aborder les modes d'implantation.",
+    fragile: "Fragile. Reprenez l'arbre de détermination en 2.2 et refaites l'exercice des douze variables.",
+    faible:  "Reprenez le module. Sans cette typologie, les modules 4 et 8 seront hors de portée."
+  });
+}
+
+/* Installe un contrôle de lecture et son bilan pour un module donné. */
+function installerControle(id, questions, conseils){
+  const hote = document.getElementById("controle-" + id);
+  if (!hote) return;
+
+  const controle = new ControleLineaire(hote, questions, id, (note, total) => {
+    etat[id] = {note: note, total: total, date: new Date().toISOString().slice(0,10)};
+    ecrire(etat);
+    rendreSommaire();
+
+    let mot;
+    if (note === total)   mot = conseils.parfait;
+    else if (note >= 6)   mot = conseils.bon;
+    else if (note >= 4)   mot = conseils.fragile;
+    else                  mot = conseils.faible;
+
+    const ouverts = MODULES.filter(m => m.etat === "ouvert").map(m => m.id);
+    const relie = SCORM.actif();
+    const cumul = SCORM.noterModule(ouverts);
+    const restants = ouverts.filter(x => !(etat[x] && etat[x].note !== undefined)).length;
+
+    document.getElementById("bilan-" + id).innerHTML =
+      '<div class="bilan amorces"><span class="bilan-note">' + note + '/' + total + '</span>' +
+      '<span style="flex:1;min-width:220px">' + mot +
+      '<br><span class="note">' +
+      (relie
+        ? 'Transmis à Moodle — note cumulée sur les modules passés : ' + cumul + '/100.' +
+          (restants ? ' Statut « en cours » tant que les ' + restants + ' module' +
+                      (restants > 1 ? 's ouverts restants ne sont' : ' ouvert restant n\'est') +
+                      ' pas passé' + (restants > 1 ? 's' : '') + '.' : '')
+        : 'Mode libre — cette note reste dans ce navigateur.') +
+      '</span></span>' +
+      (note >= 6 ? '<a class="cmd-plein" href="#accueil" style="text-decoration:none">Retour au sommaire</a>' : '') +
+      '</div>';
+  });
   controle.monter();
 }
 
 SCORM.demarrer();
 demarrer();
+
+/* La session SCORM se clôt au départ de l'étudiant, pas à la fin d'un module. */
+window.addEventListener("pagehide", () => SCORM.cloturer());
 </script>
 
 </body>
