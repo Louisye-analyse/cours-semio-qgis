@@ -1,1 +1,1 @@
-
+Placez ici DONNEES_TD2.zip (voir ../config.js).
