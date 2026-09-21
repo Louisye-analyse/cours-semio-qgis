@@ -1230,6 +1230,298 @@ table.donnees .vide{ color:var(--encre-3); }
 </div>
 
 <!-- ================================================================
+     MODULE 3
+     ================================================================ -->
+<div class="vue" id="vue-m3" hidden>
+
+  <div class="entete-module">
+    <span class="eyebrow">Module 3 — Les modes d'implantation</span>
+    <h1 style="font-size:clamp(1.9rem,4.6vw,2.9rem)">Point, ligne ou surface</h1>
+    <p class="chapo colonne">
+      Étape III de la démarche. Avant de choisir un figuré, il faut décider sur quelle
+      <strong>structure visuelle</strong> il sera posé. Ce choix paraît évident — une ville
+      est un point, une route une ligne — et c'est précisément pour cela qu'il est mal fait.
+    </p>
+    <div class="commandes" style="margin-top:.4rem">
+      <span class="jalon pret">7 sections</span>
+      <span class="jalon attente">≈ 50 minutes</span>
+      <span class="jalon attente">Contrôle : 8 questions</span>
+    </div>
+  </div>
+
+  <!-- ---------- 3.1 ---------- -->
+  <section class="bloc">
+    <div class="colonne pile">
+      <div><div class="num-bloc">3.1</div><h2>La structure avant le signe</h2></div>
+      <p>
+        Le mode d'implantation est la manière dont la donnée est posée sur la carte.
+        Il en existe trois : <strong>ponctuel</strong>, <strong>linéaire</strong> et
+        <strong>zonal</strong>. En langage graphique, ils constituent les
+        <em>structures visuelles</em> — le support sur lequel on fera ensuite varier
+        les variables visuelles du module 4.
+      </p>
+      <div class="verdict neutre">
+        <strong>L'ordre compte.</strong> On choisit d'abord la structure, ensuite le signe.
+        Un figuré proportionnel n'a de sens qu'en implantation ponctuelle ; un dégradé de
+        valeur n'a de sens qu'en implantation zonale. Inverser ces deux décisions produit
+        des cartes qui paraissent correctes et ne le sont pas.
+      </div>
+      <p class="note">
+        Ces trois modes ne valent que pour le <strong>mode vecteur</strong>. En raster,
+        l'information est portée par une grille de pixels, et la question ne se pose pas.
+        En 3D s'ajoute un quatrième mode : le volume.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---------- 3.2 ---------- -->
+  <section class="bloc pile-lg">
+    <div class="colonne pile">
+      <div><div class="num-bloc">3.2</div><h2>Ce que le logiciel manipule réellement</h2></div>
+      <p>
+        Les trois structures ne sont pas trois dessins différents : ce sont trois
+        assemblages du même élément de base, le <strong>nœud</strong>. Comprendre cet
+        emboîtement explique la plupart des messages d'erreur de QGIS.
+      </p>
+    </div>
+
+    <figure class="planche amorces" style="margin:0">
+      <div class="planche-tete"><h4>Figure 1 · Nœud, arc, polygone</h4></div>
+      <div class="planche-corps">
+        <svg class="carte-svg" viewBox="0 0 760 240" role="img"
+             aria-label="Les trois structures géométriques : un nœud isolé, un arc reliant des nœuds, et un polygone dont le nœud final rejoint le nœud initial">
+          <defs>
+            <marker id="fleche-m3" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 Z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <!-- NŒUD -->
+          <g transform="translate(20,30)" color="var(--encre-2)">
+            <line x1="16" y1="150" x2="16" y2="18" stroke="currentColor" stroke-width="1.2" marker-end="url(#fleche-m3)"/>
+            <line x1="16" y1="150" x2="190" y2="150" stroke="currentColor" stroke-width="1.2" marker-end="url(#fleche-m3)"/>
+            <text x="4" y="14" font-size="11" fill="currentColor">y</text>
+            <text x="196" y="154" font-size="11" fill="currentColor">x</text>
+            <line x1="16" y1="78" x2="105" y2="78" stroke="var(--graticule)" stroke-width="1" stroke-dasharray="3 3"/>
+            <line x1="105" y1="150" x2="105" y2="78" stroke="var(--graticule)" stroke-width="1" stroke-dasharray="3 3"/>
+            <circle cx="105" cy="78" r="6" fill="var(--foret)"/>
+            <text x="118" y="74" font-size="11.5" fill="var(--encre)">nœud</text>
+            <text x="118" y="89" font-size="10.5" fill="var(--encre-3)">(x, y) + valeur</text>
+            <text x="16" y="182" font-size="12" fill="var(--encre)" font-weight="600">Ponctuel</text>
+            <text x="16" y="198" font-size="10.5" fill="var(--encre-3)">un nœud isolé</text>
+          </g>
+
+          <!-- ARC -->
+          <g transform="translate(275,30)" color="var(--encre-2)">
+            <polyline points="20,140 58,96 96,102 134,54 178,44"
+                      fill="none" stroke="var(--leve)" stroke-width="2.4"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="20" cy="140" r="5.5" fill="var(--leve)"/>
+            <circle cx="178" cy="44" r="5.5" fill="var(--leve)"/>
+            <circle cx="58" cy="96" r="4" fill="var(--papier-releve)" stroke="var(--leve)" stroke-width="1.8"/>
+            <circle cx="96" cy="102" r="4" fill="var(--papier-releve)" stroke="var(--leve)" stroke-width="1.8"/>
+            <circle cx="134" cy="54" r="4" fill="var(--papier-releve)" stroke="var(--leve)" stroke-width="1.8"/>
+            <text x="0" y="160" font-size="10.5" fill="var(--encre-3)">nœud initial</text>
+            <text x="150" y="30" font-size="10.5" fill="var(--encre-3)">nœud final</text>
+            <text x="62" y="126" font-size="10.5" fill="var(--encre-3)">sommets</text>
+            <text x="20" y="182" font-size="12" fill="var(--encre)" font-weight="600">Linéaire</text>
+            <text x="20" y="198" font-size="10.5" fill="var(--encre-3)">des nœuds reliés entre eux</text>
+          </g>
+
+          <!-- POLYGONE -->
+          <g transform="translate(540,30)" color="var(--encre-2)">
+            <path d="M40,132 L24,78 L70,40 L140,36 L168,86 L132,140 Z"
+                  fill="var(--foret-pale)" stroke="var(--foret)" stroke-width="2.2" stroke-linejoin="round"/>
+            <circle cx="24" cy="78" r="4" fill="var(--papier-releve)" stroke="var(--foret)" stroke-width="1.8"/>
+            <circle cx="70" cy="40" r="4" fill="var(--papier-releve)" stroke="var(--foret)" stroke-width="1.8"/>
+            <circle cx="140" cy="36" r="4" fill="var(--papier-releve)" stroke="var(--foret)" stroke-width="1.8"/>
+            <circle cx="168" cy="86" r="4" fill="var(--papier-releve)" stroke="var(--foret)" stroke-width="1.8"/>
+            <circle cx="132" cy="140" r="4" fill="var(--papier-releve)" stroke="var(--foret)" stroke-width="1.8"/>
+            <circle cx="40" cy="132" r="6.5" fill="var(--foret)"/>
+            <text x="-10" y="158" font-size="10.5" fill="var(--encre-3)">nœud initial = nœud final</text>
+            <text x="20" y="182" font-size="12" fill="var(--encre)" font-weight="600">Zonal</text>
+            <text x="20" y="198" font-size="10.5" fill="var(--encre-3)">un arc refermé sur lui-même</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption class="planche-pied">
+        Un polygone n'est qu'un arc dont le dernier nœud rejoint le premier. C'est pourquoi
+        QGIS refuse d'enregistrer un polygone « non fermé », et pourquoi une couche de lignes
+        ne se convertit pas en couche de surfaces sans vérifier d'abord cette fermeture.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ---------- 3.3 ---------- -->
+  <section class="bloc pile-lg">
+    <div class="colonne pile">
+      <div><div class="num-bloc">3.3</div><h2>L'échelle décide, pas l'objet</h2></div>
+      <p>
+        Voici le point que ce module doit faire passer. Un objet n'a pas de mode
+        d'implantation « par nature ». Ce qui décide, c'est le rapport entre sa dimension
+        et celle de la zone d'étude — autrement dit l'échelle.
+      </p>
+      <p>
+        La topologie ponctuelle s'applique aux objets dont <strong>la dimension est
+        suffisamment faible par rapport à la zone d'étude</strong> pour qu'on renonce à
+        les représenter tels quels. Seules comptent alors leur localisation et leur valeur
+        thématique. Déplacez le curseur : les trois objets ci-dessous ne franchissent pas
+        ce seuil au même moment.
+      </p>
+    </div>
+
+    <figure class="planche amorces" style="margin:0">
+      <div class="planche-tete">
+        <h4>Figure 2 · Le même territoire à quatre échelles</h4>
+        <span class="chrono-libelle" id="echelle-libelle">1 : 25 000</span>
+      </div>
+      <div class="planche-corps">
+        <div class="curseur-ligne" style="margin-bottom:1rem">
+          <span class="note" style="white-space:nowrap">grande échelle</span>
+          <input type="range" id="curseur-echelle" min="0" max="3" value="1" step="1"
+                 aria-label="Niveau d'échelle" style="flex:1;min-width:180px;accent-color:var(--foret)">
+          <span class="note" style="white-space:nowrap">petite échelle</span>
+        </div>
+        <div class="duo" style="align-items:start">
+          <svg id="carte-echelle" class="carte-svg" viewBox="0 0 460 310" role="img"
+               aria-label="Une ville, un cours d'eau et une forêt représentés à quatre échelles successives"></svg>
+          <div class="pile" style="gap:.7rem">
+            <div class="cartouche" style="background:var(--papier)">
+              <div class="cartouche-titre" id="titre-echelle">Carte topographique</div>
+              <div id="lecture-echelle"></div>
+            </div>
+            <div class="legende" id="modes-echelle"></div>
+          </div>
+        </div>
+      </div>
+      <figcaption class="planche-pied" id="pied-echelle"></figcaption>
+    </figure>
+
+    <div class="colonne">
+      <div class="verdict ok">
+        <strong>Le puits.</strong> Un puits d'un mètre de diamètre ne peut pas être
+        représenté par un cercle sur une propriété de quelques hectares : à cette échelle,
+        il ferait un point de moins d'un dixième de millimètre. On conserve donc sa
+        localisation et sa nature, et l'on confie son diamètre à la valeur thématique ou
+        à la symbolisation. C'est exactement le raisonnement à tenir pour chaque couche
+        que vous chargerez.
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- 3.4 ---------- -->
+  <section class="bloc pile-lg">
+    <div class="colonne pile">
+      <div><div class="num-bloc">3.4</div><h2>Les trois modes sur une même carte</h2></div>
+      <p>
+        Une carte thématique superpose presque toujours les trois. L'ordre d'empilement
+        n'est alors pas une question de goût : une couche de surfaces placée au-dessus
+        masque tout ce qui se trouve dessous.
+      </p>
+    </div>
+
+    <figure class="planche amorces" style="margin:0">
+      <div class="planche-tete">
+        <h4>Figure 3 · Superposition et ordre des couches</h4>
+        <div class="commandes">
+          <button class="cmd" type="button" data-ordre="correct" aria-pressed="true">Ordre correct</button>
+          <button class="cmd" type="button" data-ordre="inverse" aria-pressed="false">Ordre inversé</button>
+        </div>
+      </div>
+      <div class="planche-corps">
+        <div class="duo" style="align-items:start">
+          <svg id="carte-couches" class="carte-svg" viewBox="0 0 430 330" role="img"
+               aria-label="Carte superposant des polygones, des lignes et des points, selon deux ordres d'empilement"></svg>
+          <div class="pile" style="gap:.8rem">
+            <div class="cartouche" style="background:var(--papier)">
+              <div class="cartouche-titre">Couches affichées</div>
+              <div class="pile" style="gap:.45rem" id="bascules-couches"></div>
+            </div>
+            <div id="verdict-couches"></div>
+          </div>
+        </div>
+      </div>
+      <figcaption class="planche-pied">
+        Règle de montage dans QGIS : les points en haut, les lignes ensuite, les surfaces
+        en bas. C'est l'ordre naturel de lisibilité, et il correspond à l'ordre inverse
+        de la surface occupée par chaque structure.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ---------- 3.5 ---------- -->
+  <section class="bloc pile-lg">
+    <div class="colonne pile">
+      <div><div class="num-bloc">3.5</div><h2>Exercice : attribuer un mode</h2></div>
+      <p>
+        Chaque énoncé précise l'échelle — sans elle, la question n'aurait pas de réponse.
+        Choisissez le mode d'implantation, puis lisez la justification.
+      </p>
+    </div>
+
+    <div class="planche amorces">
+      <div class="planche-tete">
+        <h4>Dix cas</h4>
+        <div class="commandes">
+          <span class="chrono-libelle" id="score-modes">0 / 10 traités</span>
+          <button class="cmd" type="button" id="modes-reprendre">Recommencer</button>
+        </div>
+      </div>
+      <div class="planche-corps"><div id="exercice-modes"></div></div>
+    </div>
+  </section>
+
+  <!-- ---------- 3.6 ---------- -->
+  <section class="bloc pile-lg">
+    <div class="colonne pile">
+      <div><div class="num-bloc">3.6</div><h2>Les couches de la Ngounié</h2></div>
+      <p>
+        Chaque couche de <code>DONNEES_TD2</code> porte un mode d'implantation qui
+        commandera, au module 8, le type de symbologie disponible dans QGIS.
+      </p>
+    </div>
+
+    <div class="tableau-enveloppe">
+      <table class="donnees">
+        <caption>Modes d'implantation du jeu de données</caption>
+        <thead>
+          <tr><th scope="col">Couche</th><th scope="col">Mode</th><th scope="col">Échelle du TP</th><th scope="col">Symbologie possible</th></tr>
+        </thead>
+        <tbody id="corps-modes-ngounie"></tbody>
+      </table>
+    </div>
+
+    <div class="colonne">
+      <div class="verdict ko">
+        <strong>Le piège du centroïde.</strong> QGIS sait convertir une couche de polygones
+        en couche de points. La manœuvre est légitime quand on veut poser un figuré
+        proportionnel sur chaque unité — un cercle dont l'aire vaut la production, par
+        exemple. Elle devient fautive dès qu'on laisse croire que le phénomène
+        <em>se localise</em> au centroïde : la population d'un département ne se concentre
+        pas en son centre géométrique, et un centroïde peut même tomber hors de son propre
+        polygone lorsque celui-ci est concave.
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- 3.7 ---------- -->
+  <section class="bloc">
+    <div class="colonne pile" style="margin-bottom:1.4rem">
+      <div><div class="num-bloc">3.7</div><h2>Contrôle de lecture</h2></div>
+      <p>Huit questions, une par une, <strong>sans retour en arrière</strong>.</p>
+    </div>
+    <div id="controle-m3"></div>
+    <div id="bilan-m3" style="margin-top:1.2rem"></div>
+  </section>
+
+  <div class="nav-bas">
+    <a class="cmd" href="#m2">← Module 2</a>
+    <a class="cmd" href="#accueil">Sommaire →</a>
+  </div>
+</div>
+
+<!-- ================================================================
      DONNÉES DU TP
      ================================================================ -->
 <div class="vue" id="vue-donnees" hidden>
@@ -1339,7 +1631,7 @@ const CFG = Object.assign({
 const MODULES = [
   {id:"m1",  t:"La carte est un langage",              s:"Définitions, démarche, les quatre questions, les cinq pièges", etat:"ouvert"},
   {id:"m2",  t:"Les données sources",                  s:"Qualitatif ordonné ou différentiel, quantitatif discret ou continu", etat:"ouvert"},
-  {id:"m3",  t:"Les modes d'implantation",             s:"Ponctuel, linéaire, zonal — et pourquoi le choix n'est pas libre", etat:"redaction"},
+  {id:"m3",  t:"Les modes d'implantation",             s:"Ponctuel, linéaire, zonal — et pourquoi le choix n'est pas libre", etat:"ouvert"},
   {id:"m4",  t:"Les variables visuelles",              s:"Taille, valeur, grain, forme, orientation, couleur : propriétés et usages", etat:"redaction"},
   {id:"m5",  t:"La couleur",                           s:"Teinte, saturation, luminosité ; seuils perceptifs ; connotations", etat:"redaction"},
   {id:"m6",  t:"Analyse de cartes",                    s:"Dix cartes réelles à décortiquer : données, implantation, variables", etat:"redaction"},
@@ -2291,6 +2583,396 @@ const Q_M2 = [
 ];
 
 /* ============================================================
+   MODULE 3 — LE MÊME TERRITOIRE À QUATRE ÉCHELLES
+   Chaque palier redessine explicitement les trois objets :
+   c'est bien une généralisation cartographique, pas un zoom.
+   ============================================================ */
+const PALIERS = [
+  {
+    e:"1 : 2 000", t:"Plan de détail",
+    ville:"zonal", riviere:"zonal", foret:"zonal",
+    lecture:"À cette échelle, tout a une surface. La ville se décompose en bâtiments, " +
+            "la rivière a deux berges, la forêt couvre un quart de la feuille. " +
+            "Aucun objet n'est assez petit pour être réduit à un point.",
+    pied:"Un millimètre sur la feuille vaut 2 mètres au sol : un bâtiment de 12 m fait 6 mm."
+  },
+  {
+    e:"1 : 25 000", t:"Carte topographique",
+    ville:"zonal", riviere:"lineaire", foret:"zonal",
+    lecture:"Premier seuil franchi. La rivière, large de quelques mètres mais longue de " +
+            "kilomètres, bascule en implantation linéaire : sa dimension transversale " +
+            "devient négligeable devant sa dimension longitudinale. La ville reste une " +
+            "surface — son enveloppe urbaine, sans le détail du bâti.",
+    pied:"Un millimètre vaut 25 mètres : une rivière de 8 m ferait un tiers de millimètre de large."
+  },
+  {
+    e:"1 : 250 000", t:"Carte régionale",
+    ville:"ponctuel", riviere:"lineaire", foret:"zonal",
+    lecture:"Deuxième seuil. La ville passe au point : son étendue ne se lit plus, seules " +
+            "comptent sa position et sa valeur — population, statut administratif. " +
+            "La forêt, elle, tient encore largement la surface.",
+    pied:"Un millimètre vaut 250 mètres : une ville de 3 km fait 12 mm, mais son contour cesse d'être informatif."
+  },
+  {
+    e:"1 : 2 500 000", t:"Carte nationale",
+    ville:"ponctuel", riviere:"lineaire", foret:"zonal",
+    lecture:"Les trois modes se sont stabilisés, mais tout s'est généralisé : les méandres " +
+            "de la rivière ont disparu, le contour forestier s'est simplifié. " +
+            "Le mode d'implantation ne change plus — la généralisation, si.",
+    pied:"Un millimètre vaut 2,5 kilomètres. Seule la forêt reste zonale, parce qu'elle mesure des dizaines de kilomètres."
+  }
+];
+
+const FORMES_ECHELLE = {
+  riviere: [
+    /* 0 — surface d'eau, deux berges */
+    '<path d="M0,212 C110,200 250,224 460,196 L460,236 C250,264 110,240 0,252 Z" ' +
+      'fill="var(--v3)" stroke="var(--leve)" stroke-width="1.2"/>',
+    /* 1 — ligne épaisse, méandres conservés */
+    '<path d="M0,224 C60,214 96,232 140,226 C200,218 230,244 290,232 C360,218 400,230 460,214" ' +
+      'fill="none" stroke="var(--leve)" stroke-width="4.5" stroke-linecap="round"/>',
+    /* 2 — ligne fine + affluent */
+    '<path d="M0,224 C60,216 100,230 145,225 C205,219 232,240 292,230 C360,219 400,229 460,216" ' +
+      'fill="none" stroke="var(--leve)" stroke-width="2.2" stroke-linecap="round"/>' +
+    '<path d="M186,118 C196,158 182,198 198,227" fill="none" stroke="var(--leve)" stroke-width="1.6"/>',
+    /* 3 — ligne simplifiée, méandres effacés */
+    '<path d="M0,226 L150,222 L300,230 L460,215" fill="none" stroke="var(--leve)" ' +
+      'stroke-width="1.4" stroke-linejoin="round"/>'
+  ],
+  foret: [
+    '<path d="M296,16 L452,10 L458,132 L338,146 L306,92 Z" fill="var(--g3)" stroke="var(--foret)" stroke-width="1.2"/>',
+    '<path d="M300,18 L450,12 L456,128 L336,142 L308,90 Z" fill="var(--g3)" stroke="var(--foret)" stroke-width="1.2"/>',
+    '<path d="M306,24 L446,18 L450,122 L334,134 Z" fill="var(--g3)" stroke="var(--foret)" stroke-width="1.2"/>',
+    '<path d="M330,44 L432,40 L436,108 L340,114 Z" fill="var(--g3)" stroke="var(--foret)" stroke-width="1.2"/>'
+  ]
+};
+
+/* Bâti du plan de détail : dessiné, pas décoratif — c'est ce qui disparaît au palier suivant. */
+const BATI = [[52,74],[86,70],[120,78],[58,104],[92,100],[126,106],[160,82],[64,134],[98,130],[132,138],[166,112],[196,96]];
+
+function dessinerEchelle(niveau){
+  const svg = document.getElementById("carte-echelle");
+  const p = PALIERS[niveau];
+  let s = '<rect x="0" y="0" width="460" height="310" fill="var(--papier)"/>';
+
+  s += FORMES_ECHELLE.foret[niveau];
+  s += FORMES_ECHELLE.riviere[niveau];
+
+  if (p.ville === "zonal" && niveau === 0){
+    BATI.forEach(([x,y]) => {
+      s += '<rect x="' + x + '" y="' + y + '" width="22" height="15" rx="1" ' +
+           'fill="var(--bistre-pale)" stroke="var(--bistre)" stroke-width="1"/>';
+    });
+    s += '<text x="52" y="60" font-size="11" fill="var(--encre)">Bâti</text>';
+  } else if (p.ville === "zonal"){
+    s += '<path d="M56,70 L196,56 L232,118 L188,176 L78,166 Z" ' +
+         'fill="var(--bistre-pale)" stroke="var(--bistre)" stroke-width="1.6"/>' +
+         '<text x="104" y="120" font-size="11.5" fill="var(--encre)">Mouila</text>';
+  } else {
+    const r = (niveau === 2) ? 7.5 : 5;
+    s += '<circle cx="150" cy="116" r="' + r + '" fill="var(--bistre)" ' +
+         'stroke="var(--papier)" stroke-width="1.6"/>' +
+         '<text x="' + (150 + r + 7) + '" y="120" font-size="11.5" fill="var(--encre)">Mouila</text>';
+  }
+
+  /* Échelle graphique : une barre dont la longueur ne change pas,
+     mais dont la valeur au sol est multipliée par dix à chaque palier. */
+  const SOL = ["200 m", "2 km", "20 km", "200 km"];
+  s += '<g transform="translate(24,282)">' +
+       '<rect x="0" y="0" width="45" height="6" fill="var(--encre)"/>' +
+       '<rect x="45" y="0" width="45" height="6" fill="var(--papier)" stroke="var(--encre)" stroke-width="1"/>' +
+       '<text x="0" y="-6" font-size="10" fill="var(--encre-2)">0</text>' +
+       '<text x="82" y="-6" font-size="10" fill="var(--encre-2)">' + SOL[niveau] + '</text>' +
+       '</g>';
+  s += '<text x="330" y="288" font-size="11" fill="var(--encre-2)" ' +
+       'font-family="var(--f-marge)">' + p.e + '</text>';
+
+  svg.innerHTML = s;
+
+  document.getElementById("echelle-libelle").textContent = p.e;
+  document.getElementById("titre-echelle").textContent = p.t;
+  document.getElementById("lecture-echelle").innerHTML =
+    '<p style="font-size:.9rem;color:var(--encre-2);margin-top:.5rem">' + p.lecture + '</p>';
+  document.getElementById("pied-echelle").textContent = p.pied;
+
+  /* La couleur désigne l'objet, la forme du figuré désigne le mode :
+     chaque variable visuelle ne porte qu'une information. */
+  const NOM = {ponctuel:"Ponctuel", lineaire:"Linéaire", zonal:"Zonal"};
+  const GLYPHE = {
+    ponctuel: c => '<circle cx="11" cy="8" r="4.5" fill="' + c + '"/>',
+    lineaire: c => '<line x1="1" y1="12" x2="21" y2="4" stroke="' + c + '" stroke-width="2.6" stroke-linecap="round"/>',
+    zonal:    c => '<rect x="1" y="2" width="20" height="12" fill="' + c + '" opacity=".38" stroke="' + c + '" stroke-width="1.3"/>'
+  };
+  const COULEUR_OBJET = {ville:"var(--bistre)", riviere:"var(--leve)", foret:"var(--foret)"};
+
+  document.getElementById("modes-echelle").innerHTML =
+    [["Mouila","ville"],["Rivière","riviere"],["Forêt","foret"]].map(([nom,cle]) => {
+      const m = p[cle];
+      return '<div class="legende-ligne">' +
+             '<svg width="22" height="16" style="flex:none" aria-hidden="true">' +
+             GLYPHE[m](COULEUR_OBJET[cle]) + '</svg>' +
+             '<span>' + nom + ' — <strong>' + NOM[m] + '</strong></span></div>';
+    }).join("");
+}
+
+/* ============================================================
+   MODULE 3 — SUPERPOSITION ET ORDRE DES COUCHES
+   ============================================================ */
+const RIVIERE_M3 = "M62,108 C110,150 96,196 142,224 C184,250 214,238 252,262 C286,284 300,296 318,300";
+const AFFLUENT_M3 = "M212,96 C206,142 178,178 168,236";
+const VILLES_M3 = [
+  {x:205, y:132, n:"Mouila"}, {x:118, y:212, n:"Fougamou"},
+  {x:296, y:196, n:"Ndendé"}, {x:243, y:272, n:"Mbigou"}
+];
+let couchesActives = {zonal:true, lineaire:true, ponctuel:true};
+let ordreCouches = "correct";
+
+function dessinerCouches(){
+  const svg = document.getElementById("carte-couches");
+  const min = Math.min(...PLUIE), max = Math.max(...PLUIE);
+
+  function blocZonal(){
+    let s = "";
+    COMMUNES.forEach((c,i) => {
+      s += '<path d="' + c.d + '" fill="' + RAMPE_VERTE[classe(PLUIE[i], min, max, 7)] +
+           '" stroke="var(--papier-releve)" stroke-width="1"/>';
+    });
+    s += '<path d="' + CONTOUR + '" fill="none" stroke="var(--encre-2)" stroke-width="1.4"/>';
+    return s;
+  }
+  function blocLineaire(){
+    return '<path d="' + RIVIERE_M3 + '" fill="none" stroke="var(--leve)" stroke-width="3.2" ' +
+           'stroke-linecap="round"/>' +
+           '<path d="' + AFFLUENT_M3 + '" fill="none" stroke="var(--leve)" stroke-width="2" ' +
+           'stroke-linecap="round"/>';
+  }
+  function blocPonctuel(){
+    return VILLES_M3.map(v =>
+      '<circle cx="' + v.x + '" cy="' + v.y + '" r="6" fill="var(--bistre)" ' +
+      'stroke="var(--papier-releve)" stroke-width="2"/>' +
+      '<text x="' + (v.x + 10) + '" y="' + (v.y + 4) + '" font-size="10.5" ' +
+      'fill="var(--encre)" stroke="var(--papier-releve)" stroke-width="2.6" ' +
+      'paint-order="stroke">' + v.n + '</text>').join("");
+  }
+
+  const blocs = {zonal:blocZonal, lineaire:blocLineaire, ponctuel:blocPonctuel};
+  const pile = (ordreCouches === "correct")
+    ? ["zonal","lineaire","ponctuel"]   /* dessiné en premier = dessous */
+    : ["ponctuel","lineaire","zonal"];
+
+  svg.innerHTML = pile.filter(k => couchesActives[k]).map(k => blocs[k]()).join("");
+
+  document.getElementById("verdict-couches").innerHTML = (ordreCouches === "correct")
+    ? '<div class="verdict ok"><strong>Lisible.</strong> Les surfaces au fond portent le ' +
+      'fond thématique, les lignes passent dessus, les points et leurs étiquettes dominent.</div>'
+    : '<div class="verdict ko"><strong>Illisible.</strong> La couche de surfaces, placée au ' +
+      'sommet, masque intégralement la rivière et les villes. Elles sont toujours chargées ' +
+      'dans le projet — simplement invisibles. C\'est la panne la plus fréquente en début de TP.</div>';
+}
+
+function monterBasculesCouches(){
+  const hote = document.getElementById("bascules-couches");
+  const LIB = {ponctuel:"Villes — ponctuel", lineaire:"Hydrographie — linéaire", zonal:"Précipitations — zonal"};
+  hote.innerHTML = ["ponctuel","lineaire","zonal"].map(k =>
+    '<label style="display:flex;gap:.55rem;align-items:center;font-size:.88rem;cursor:pointer">' +
+    '<input type="checkbox" id="couche-' + k + '" data-couche="' + k + '" checked ' +
+    'style="accent-color:var(--foret)"><span>' + LIB[k] + '</span></label>').join("");
+  hote.querySelectorAll("input[data-couche]").forEach(i => {
+    i.addEventListener("change", () => {
+      couchesActives[i.dataset.couche] = i.checked;
+      dessinerCouches();
+    });
+  });
+  document.querySelectorAll("[data-ordre]").forEach(b => {
+    b.addEventListener("click", () => {
+      ordreCouches = b.dataset.ordre;
+      document.querySelectorAll("[data-ordre]").forEach(x =>
+        x.setAttribute("aria-pressed", String(x === b)));
+      dessinerCouches();
+    });
+  });
+}
+
+/* ============================================================
+   MODULE 3 — EXERCICE : ATTRIBUER UN MODE
+   ============================================================ */
+const MODES = [
+  {c:"ponctuel", t:"Ponctuel"}, {c:"lineaire", t:"Linéaire"}, {c:"zonal", t:"Zonal"}
+];
+
+const CAS_MODES = [
+  {v:"Les puits d'une exploitation agricole, sur un plan au 1 : 5 000", b:"ponctuel",
+   e:"Un puits d'un mètre de diamètre ferait 0,2 mm à cette échelle. Sa dimension est " +
+     "négligeable : on garde la localisation et la valeur thématique."},
+  {v:"Le réseau hydrographique mondial sur un planisphère au 1 : 50 000 000", b:"lineaire",
+   e:"Même l'Amazone, large de plusieurs kilomètres, ferait un dixième de millimètre. " +
+     "La dimension longitudinale reste pourtant prépondérante : implantation linéaire."},
+  {v:"Les formations géologiques de la Ngounié au 1 : 700 000", b:"zonal",
+   e:"Les affleurements couvrent des centaines de kilomètres carrés : leur délimitation " +
+     "est précisément l'information à cartographier. C'est le cas du module 8."},
+  {v:"L'Ogooué sur un plan d'aménagement de berge au 1 : 1 000", b:"zonal",
+   e:"Le piège. À cette échelle, un fleuve large de 400 m occupe 40 cm de feuille : " +
+     "ses deux rives deviennent l'objet même de l'étude. Un cours d'eau n'est pas " +
+     "linéaire « par nature »."},
+  {v:"Les chefs-lieux du Gabon sur une carte nationale au 1 : 2 000 000", b:"ponctuel",
+   e:"Libreville s'étend sur une quinzaine de kilomètres, soit 7 mm. On pourrait la " +
+     "dessiner — mais son contour n'apporte rien à une carte du semis urbain national."},
+  {v:"Les routes nationales au 1 : 200 000", b:"lineaire",
+   e:"Cas d'école : dimension longitudinale kilométrique, dimension transversale de " +
+     "quelques mètres."},
+  {v:"Une parcelle cadastrale sur un plan au 1 : 500", b:"zonal",
+   e:"Les limites de la parcelle sont juridiquement l'objet du document. Les réduire " +
+     "à un point supprimerait l'information."},
+  {v:"Les stations météorologiques d'un pays, sur une carte nationale", b:"ponctuel",
+   e:"Une station occupe quelques dizaines de mètres carrés, et l'on ne s'intéresse " +
+     "qu'à la mesure qu'elle porte : ponctuel à toute échelle nationale."},
+  {v:"Les courbes de niveau d'une carte topographique au 1 : 25 000", b:"lineaire",
+   e:"Une courbe de niveau n'a aucune largeur réelle — c'est une abstraction, " +
+     "l'intersection du relief et d'un plan horizontal. Strictement linéaire."},
+  {v:"Une mare de 200 m de diamètre sur une carte départementale au 1 : 250 000", b:"ponctuel",
+   e:"200 m donnent 0,8 mm : en dessous du seuil de perception. On la marque d'un figuré " +
+     "ponctuel, quitte à exagérer volontairement sa taille pour la rendre visible — " +
+     "ce qu'on appelle la surcharge, et qui reste légitime tant que la légende l'annonce."}
+];
+
+function monterExerciceModes(){
+  const hote = document.getElementById("exercice-modes");
+  let faites = {};
+
+  function compter(){
+    const n = Object.keys(faites).length;
+    const bons = Object.values(faites).filter(r => r.ok).length;
+    document.getElementById("score-modes").textContent =
+      n === 0 ? "0 / 10 traités" : n + " / 10 traités — " + bons + " juste" + (bons > 1 ? "s" : "");
+  }
+
+  function rendre(){
+    hote.innerHTML = CAS_MODES.map((o,i) => {
+      const rep = faites[i], fini = rep !== undefined;
+      return '<div class="ligne-variable' + (fini ? " traitee" : "") + '">' +
+        '<div class="variable-texte"><span class="variable-num">' + String(i+1).padStart(2,"0") + '</span>' +
+        '<span>' + o.v + '</span></div>' +
+        '<div class="variable-choix">' + MODES.map(c => {
+          let cls = "cmd";
+          if (fini){
+            if (c.c === o.b)        cls += " reponse-juste";
+            else if (c.c === rep.c) cls += " reponse-fausse";
+            else                    cls += " reponse-eteinte";
+          }
+          return '<button class="' + cls + '" type="button" data-m="' + i + '" data-c="' + c.c + '"' +
+                 (fini ? " disabled" : "") + '>' + c.t + '</button>';
+        }).join("") + '</div>' +
+        (fini ? '<div class="explication"><b>' + (rep.ok ? "Juste." : "À revoir.") + '</b> ' + o.e + '</div>' : '') +
+        '</div>';
+    }).join("");
+
+    hote.querySelectorAll("button[data-m]").forEach(b => {
+      b.addEventListener("click", () => {
+        const i = +b.dataset.m;
+        faites[i] = {c:b.dataset.c, ok:(b.dataset.c === CAS_MODES[i].b)};
+        rendre(); compter();
+      });
+    });
+  }
+  document.getElementById("modes-reprendre").addEventListener("click", () => { faites = {}; rendre(); compter(); });
+  rendre(); compter();
+}
+
+const MODES_NGOUNIE = [
+  ["Dep_Gabon", "Zonal", "1 : 700 000", "Aplats de teinte, contours"],
+  ["Geol_Ngounie", "Zonal", "1 : 700 000", "Aplats, textures, dégradés si ordonné"],
+  ["hydro", "Linéaire", "1 : 700 000", "Épaisseur, teinte, style de trait"],
+  ["Localités", "Ponctuel", "1 : 700 000", "Figurés proportionnels, formes, étiquettes"],
+  ["SRTM", "Raster", "—", "Teintes hypsométriques — hors des trois modes"]
+];
+
+/* ============================================================
+   MODULE 3 — CONTRÔLE
+   ============================================================ */
+const Q_M3 = [
+  { q:"Qu'est-ce qui détermine le mode d'implantation d'un objet ?",
+    choix:["La nature de l'objet : une ville est un point, une route une ligne",
+           "Le rapport entre la dimension de l'objet et celle de la zone d'étude",
+           "Le format du fichier : shapefile de points, de lignes ou de polygones",
+           "Le choix esthétique du cartographe"],
+    bon:1,
+    exp:"C'est l'<b>échelle</b> qui tranche. Le même fleuve est linéaire au 1 : 50 000 et " +
+        "zonal sur un plan de berge au 1 : 1 000. Le format du fichier est une conséquence " +
+        "de cette décision, jamais sa cause." },
+
+  { q:"La topologie linéaire s'applique aux objets dont :",
+    choix:["La longueur dépasse un kilomètre",
+           "La dimension longitudinale est prépondérante devant la dimension transversale",
+           "La géométrie comporte plus de deux nœuds",
+           "Les extrémités ne se rejoignent pas"],
+    bon:1,
+    exp:"C'est un rapport, pas un seuil absolu. Un réseau hydrographique large de quelques " +
+        "mètres mais long de dizaines de kilomètres relève du linéaire ; le même cours " +
+        "d'eau sur vingt mètres de berge relève du zonal." },
+
+  { q:"Géométriquement, qu'est-ce qui distingue un polygone d'un arc ?",
+    choix:["Le polygone comporte davantage de sommets",
+           "Le polygone possède une surface renseignée dans la table attributaire",
+           "Le nœud final du polygone est confondu avec son nœud initial",
+           "L'arc ne peut pas être courbe"],
+    bon:2,
+    exp:"Un polygone est un arc refermé. C'est la raison pour laquelle QGIS parle de " +
+        "géométrie « non fermée » quand une numérisation a échoué : il manque la " +
+        "coïncidence du dernier nœud avec le premier." },
+
+  { q:"Dans quel ordre empiler les couches d'une carte thématique ?",
+    choix:["Surfaces en haut, lignes au milieu, points en bas",
+           "Points en haut, lignes au milieu, surfaces en bas",
+           "Par ordre alphabétique des couches",
+           "L'ordre n'a pas d'incidence, chaque couche restant visible"],
+    bon:1,
+    exp:"Les surfaces occupent le plus de place : placées au sommet, elles masquent tout. " +
+        "Les couches masquées restent chargées dans le projet, ce qui rend la panne " +
+        "déroutante — on cherche une couche absente alors qu'elle est simplement dessous." },
+
+  { q:"Les trois modes d'implantation s'appliquent :",
+    choix:["À toutes les données géographiques sans exception",
+           "Aux seules données vectorielles",
+           "Aux seules données matricielles",
+           "Aux données 3D uniquement"],
+    bon:1,
+    exp:"En raster, l'information est portée par une grille de pixels : la question du mode " +
+        "ne se pose pas. C'est le cas du SRTM que vous traiterez au module 9. " +
+        "En 3D s'ajoute un quatrième mode, le volume." },
+
+  { q:"Un puits d'un mètre de diamètre sur une propriété de quelques hectares. Que fait-on de son diamètre ?",
+    choix:["On le dessine à l'échelle, quitte à ce qu'il soit minuscule",
+           "On renonce à l'information : elle n'est pas cartographiable",
+           "On le confie à la valeur thématique ou à la symbolisation",
+           "On change d'échelle pour que le puits devienne visible"],
+    bon:2,
+    exp:"En implantation ponctuelle, seules la localisation et la valeur thématique " +
+        "importent. Les caractéristiques de l'objet — dont sa taille réelle — se " +
+        "transmettent par la <b>symbolisation</b>, pas par la géométrie." },
+
+  { q:"Convertir une couche de polygones en points par calcul du centroïde est fautif lorsque :",
+    choix:["On veut poser un figuré proportionnel sur chaque unité",
+           "On laisse croire que le phénomène se localise au centroïde",
+           "Le polygone comporte plus de dix sommets",
+           "La couche est projetée en UTM"],
+    bon:1,
+    exp:"Poser un cercle proportionnel au centroïde est une pratique courante et légitime. " +
+        "L'erreur consiste à faire croire à une <b>localisation</b> : la population d'un " +
+        "département ne se concentre pas en son centre géométrique, lequel peut d'ailleurs " +
+        "tomber hors du polygone si celui-ci est concave." },
+
+  { q:"Sur une carte nationale au 1 : 2 500 000, pourquoi une forêt reste-t-elle zonale alors qu'une ville devient ponctuelle ?",
+    choix:["Parce que la végétation est toujours représentée en surface",
+           "Parce que la forêt mesure des dizaines de kilomètres, la ville quelques-uns",
+           "Parce que les forêts sont des données raster",
+           "Parce que la ville porte une valeur thématique, pas la forêt"],
+    bon:1,
+    exp:"Chaque objet franchit le seuil à une échelle différente, selon sa dimension propre. " +
+        "Une forêt de 40 km fait 16 mm au 1 : 2 500 000 et reste parfaitement délimitable ; " +
+        "une ville de 3 km fait 1,2 mm et son contour cesse d'être informatif." }
+];
+
+/* ============================================================
    PASSERELLE SCORM 1.2
    Quand la page est jouée depuis Moodle, le LMS expose un objet
    « API » quelque part dans la chaîne des fenêtres parentes.
@@ -2606,6 +3288,32 @@ function demarrer(){
   rendreQCM(document.getElementById("qcm-codage"), Q_CODAGE, "codage");
   document.querySelectorAll("#qcm-codage input").forEach(inp => {
     inp.addEventListener("change", () => corrigerQCM(document.getElementById("qcm-codage"), Q_CODAGE));
+  });
+
+  /* ---- Module 3 ---- */
+  dessinerEchelle(1);
+  document.getElementById("curseur-echelle").addEventListener("input", e =>
+    dessinerEchelle(+e.target.value));
+  monterBasculesCouches();
+  dessinerCouches();
+  monterExerciceModes();
+
+  const tbM3 = document.getElementById("corps-modes-ngounie");
+  MODES_NGOUNIE.forEach(([couche, mode, ech, symbo]) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML =
+      "<th scope='row' style='font-weight:400;font-family:var(--f-marge);font-size:.8rem'>" + couche + "</th>" +
+      "<td style='text-align:left'>" + mode + "</td>" +
+      "<td>" + ech + "</td>" +
+      "<td style='text-align:left'>" + symbo + "</td>";
+    tbM3.appendChild(tr);
+  });
+
+  installerControle("m3", Q_M3, {
+    parfait: "Module acquis. La structure visuelle est en place : le module 4 peut porter les variables.",
+    bon:     "Acquis dans l'ensemble. Revoyez les cas manqués : le seuil d'échelle doit devenir un réflexe.",
+    fragile: "Fragile. Reprenez la figure 2 et refaites les dix cas : c'est l'échelle qui décide, jamais l'objet.",
+    faible:  "Reprenez le module. Sans cette notion, la symbologie du TP se fera au hasard."
   });
 
   installerControle("m2", Q_M2, {
